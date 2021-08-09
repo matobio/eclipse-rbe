@@ -1,17 +1,8 @@
 /*
- * Copyright (C) 2003-2017  Pascal Essiembre
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (C) 2003-2017 Pascal Essiembre Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 package com.essiembre.eclipse.rbe.ui.editor;
 
@@ -28,6 +19,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
@@ -57,26 +49,23 @@ import com.essiembre.eclipse.rbe.ui.views.ResourceBundleOutline;
  * Multi-page editor for editing resource bundles.
  * @author Pascal Essiembre
  */
-public class ResourceBundleEditor extends MultiPageEditorPart
-        implements IGotoMarker {
+public class ResourceBundleEditor extends MultiPageEditorPart implements IGotoMarker {
 
     /** Editor ID, as defined in plugin.xml. */
-    public static final String EDITOR_ID = 
-       "com.essiembre.eclipse.rbe.ui.editor.ResourceBundleEditor";
-    
-    private ResourceManager resourceMediator;
-    private I18nPage i18nPage;
+    public static final String     EDITOR_ID              = "com.essiembre.eclipse.rbe.ui.editor.ResourceBundleEditor";
+
+    private ResourceManager        resourceMediator;
+    private I18nPage               i18nPage;
     /** New locale page. */
-    private NewLocalePage newLocalePage;
-    
+    private NewLocalePage          newLocalePage;
+
     /** the outline which additionally allows to navigate through the keys. */
-    private ResourceBundleOutline outline;
-    
-    private ResourceChangeListener resourceChangeListener = 
-            new ResourceChangeListener();
-    private List<IPath> paths = new ArrayList<>();
-    private SourceEditor lastEditor;
-    
+    private ResourceBundleOutline  outline;
+
+    private ResourceChangeListener resourceChangeListener = new ResourceChangeListener();
+    private List<IPath>            paths                  = new ArrayList<>();
+    private SourceEditor           lastEditor;
+
     /**
      * Creates a multi-page editor example.
      */
@@ -84,166 +73,148 @@ public class ResourceBundleEditor extends MultiPageEditorPart
         super();
     }
 
+
     /**
      * The <code>MultiPageEditorExample</code> implementation of this method
      * checks that the input is an instance of <code>IFileEditorInput</code>.
      */
     @Override
-    public void init(IEditorSite site, IEditorInput editorInput)
-            throws PartInitException {
+    public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException {
         super.init(site, editorInput);
         if (editorInput instanceof IFileEditorInput) {
             IFile file = ((IFileEditorInput) editorInput).getFile();
             try {
-                resourceMediator = new ResourceManager(site, file);
+                this.resourceMediator = new ResourceManager(site, file);
             } catch (CoreException e) {
-                UIUtils.showErrorDialog(
-                        site.getShell(), e, "error.init.ui");
+                UIUtils.showErrorDialog(site.getShell(), e, "error.init.ui");
                 return;
             }
-            
-            ResourcesPlugin.getWorkspace().addResourceChangeListener(
-                    resourceChangeListener, IResourceChangeEvent.POST_CHANGE);
 
-            setPartName(resourceMediator.getEditorDisplayName());
-            setContentDescription(
-                    RBEPlugin.getString("editor.content.desc")
-                  + resourceMediator.getEditorDisplayName() + ".");
-            setTitleImage(UIUtils.getImage(UIUtils.IMAGE_RESOURCE_BUNDLE));
-            closeIfAreadyOpen(site, file);
+            ResourcesPlugin.getWorkspace().addResourceChangeListener(this.resourceChangeListener, IResourceChangeEvent.POST_CHANGE);
+
+            this.setPartName(this.resourceMediator.getEditorDisplayName());
+            this.setContentDescription(RBEPlugin.getString("editor.content.desc") + this.resourceMediator.getEditorDisplayName() + ".");
+            this.setTitleImage(UIUtils.getImage(UIUtils.IMAGE_RESOURCE_BUNDLE));
+            this.closeIfAreadyOpen(site, file);
         } else {
-            throw new PartInitException(
-                    "Invalid Input: Must be IFileEditorInput");
+            throw new PartInitException("Invalid Input: Must be IFileEditorInput");
         }
     }
-    
+
+
     /**
      * Gets the resource manager.
      * @return the resource manager
      */
     public ResourceManager getResourceManager() {
-        return resourceMediator;
+        return this.resourceMediator;
     }
-    
+
+
     /**
      * Creates the pages of the multi-page editor.
      */
     @Override
     protected void createPages() {
-       // Create I18N page
+        // Create I18N page
         int index;
         try {
-           I18nPageEditor i18PageEditor = new I18nPageEditor(resourceMediator);
-           index = addPage(i18PageEditor, null);
-           i18nPage = i18PageEditor.getI18nPage();
-           setPageText(index, RBEPlugin.getString("editor.properties"));
-           setPageImage(index, UIUtils.getImage(UIUtils.IMAGE_RESOURCE_BUNDLE));
+            I18nPageEditor i18PageEditor = new I18nPageEditor(this.resourceMediator);
+            index = this.addPage(i18PageEditor, null);
+            this.i18nPage = i18PageEditor.getI18nPage();
+            this.setPageText(index, RBEPlugin.getString("editor.properties"));
+            this.setPageImage(index, UIUtils.getImage(UIUtils.IMAGE_RESOURCE_BUNDLE));
+        } catch (PartInitException argh) {
+            ErrorDialog.openError(this.getSite().getShell(), "Error creating i18PageEditor page.", null, argh.getStatus());
         }
-        catch (PartInitException argh) {
-           ErrorDialog.openError(getSite().getShell(), 
-                   "Error creating i18PageEditor page.",
-                           null, argh.getStatus());
-        }
-        
+
         // Create text editor pages for each locales
         try {
-            SourceEditor[] sourceEditors = resourceMediator.getSourceEditors();
+            SourceEditor[] sourceEditors = this.resourceMediator.getSourceEditors();
             for (int i = 0; i < sourceEditors.length; i++) {
                 SourceEditor sourceEditor = sourceEditors[i];
-                index = addPage(
-                   sourceEditor.getEditor(), 
-                   sourceEditor.getEditor().getEditorInput());
-                setPageText(index, UIUtils.getDisplayName(
-                        sourceEditor.getLocale()));
-                setPageImage(index, 
-                        UIUtils.getImage(UIUtils.IMAGE_PROPERTIES_FILE));
-                
-                paths.add( sourceEditor.getFile().getFullPath() );
+                index = this.addPage(sourceEditor.getEditor(), sourceEditor.getEditor().getEditorInput());
+                this.setPageText(index, UIUtils.getDisplayName(sourceEditor.getLocale()));
+                this.setPageImage(index, UIUtils.getImage(UIUtils.IMAGE_PROPERTIES_FILE));
+
+                this.paths.add(sourceEditor.getFile().getFullPath());
             }
-            outline = new ResourceBundleOutline(resourceMediator.getKeyTree());
-            
-            
+            this.outline = new ResourceBundleOutline(this.resourceMediator.getKeyTree());
+
         } catch (PartInitException e) {
-            ErrorDialog.openError(getSite().getShell(), 
-                "Error creating text editor page.",
-                null, e.getStatus());
+            ErrorDialog.openError(this.getSite().getShell(), "Error creating text editor page.", null, e.getStatus());
         }
-        
+
         // Add "new locale" page
-        newLocalePage = new NewLocalePage(
-                getContainer(), resourceMediator, this);
-        index = addPage(newLocalePage);
-        setPageText(index, RBEPlugin.getString("editor.new.tab"));
-        setPageImage(
-                index, UIUtils.getImage(UIUtils.IMAGE_NEW_PROPERTIES_FILE));
+        this.newLocalePage = new NewLocalePage(this.getContainer(), this.resourceMediator, this);
+        index = this.addPage(this.newLocalePage);
+        this.setPageText(index, RBEPlugin.getString("editor.new.tab"));
+        this.setPageImage(index, UIUtils.getImage(UIUtils.IMAGE_NEW_PROPERTIES_FILE));
     }
-    
+
+
     public void addResource(IFile resource, Locale locale) {
-        try {            
-            SourceEditor sourceEditor = 
-                    resourceMediator.addSourceEditor(resource, locale);
-            int index = getPageCount() - 1;
-            addPage(index,
-                    sourceEditor.getEditor(), 
-                    sourceEditor.getEditor().getEditorInput());
-            setPageText(index, UIUtils.getDisplayName(
-                    sourceEditor.getLocale()));
-            setPageImage(index, 
-                    UIUtils.getImage(UIUtils.IMAGE_PROPERTIES_FILE));
-            i18nPage.refreshPage();
-            setActivePage(0);
-            // re-set the content to trigger dirty state 
-            sourceEditor.setContent(sourceEditor.getContent()); 
+        try {
+            SourceEditor sourceEditor = this.resourceMediator.addSourceEditor(resource, locale);
+            int index = this.getPageCount() - 1;
+            this.addPage(index, sourceEditor.getEditor(), sourceEditor.getEditor().getEditorInput());
+            this.setPageText(index, UIUtils.getDisplayName(sourceEditor.getLocale()));
+            this.setPageImage(index, UIUtils.getImage(UIUtils.IMAGE_PROPERTIES_FILE));
+            this.i18nPage.refreshPage();
+            this.setActivePage(0);
+            // re-set the content to trigger dirty state
+            sourceEditor.setContent(sourceEditor.getContent());
         } catch (PartInitException e) {
-            ErrorDialog.openError(getSite().getShell(), 
-                    "Error creating resource mediator.",
-                    null, e.getStatus());
+            ErrorDialog.openError(this.getSite().getShell(), "Error creating resource mediator.", null, e.getStatus());
         }
     }
 
+
     @SuppressWarnings("unchecked")
-	@Override
-	public <T> T getAdapter(Class<T> adapter) {
-    	T obj = null;
-    	try {
+    @Override
+    public <T> T getAdapter(Class<T> adapter) {
+        T obj = null;
+        try {
             obj = super.getAdapter(adapter);
         } catch (NullPointerException e) {
-            RBEPlugin.getDefault().getLog().log(new Status(
-                    Status.ERROR, RBEPlugin.ID, 
-                    "Got a NPE from MultiPageEditorPart#getAdapter(Class<T>) "
-                  + "for adapter class: " + adapter, e));
+            RBEPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, RBEPlugin.ID, "Got a NPE from MultiPageEditorPart#getAdapter(Class<T>) " + "for adapter class: " + adapter, e));
         }
         if (obj == null && IContentOutlinePage.class.equals(adapter)) {
-            return (T) outline;
+            return (T) this.outline;
         }
         return obj;
     }
-    
+
+
     /**
      * Saves the multi-page editor's document.
      */
     @Override
     public void doSave(IProgressMonitor monitor) {
-        KeyTree keyTree = resourceMediator.getKeyTree();
+        KeyTree keyTree = this.resourceMediator.getKeyTree();
         String key = keyTree.getSelectedKey();
 
-        i18nPage.refreshEditorOnChanges();
-        resourceMediator.save(monitor);
-        
+        this.i18nPage.refreshEditorOnChanges();
+        this.resourceMediator.save(monitor);
+
         keyTree.setUpdater(keyTree.getUpdater());
-        if (key != null)
+        if (key != null) {
             keyTree.selectKey(key);
+        }
     }
-    
+
+
     @Override
     public void doSaveAs() {
         // Save As not allowed.
     }
-    
+
+
     @Override
     public boolean isSaveAsAllowed() {
         return false;
     }
+
 
     /**
      * Change current page based on locale.  If there is no editors associated
@@ -251,37 +222,38 @@ public class ResourceBundleEditor extends MultiPageEditorPart
      * @param locale locale used to identify the page to change to
      */
     public void setActivePage(Locale locale) {
-        SourceEditor[] editors = resourceMediator.getSourceEditors();
+        SourceEditor[] editors = this.resourceMediator.getSourceEditors();
         int index = -1;
         for (int i = 0; i < editors.length; i++) {
             SourceEditor editor = editors[i];
             Locale editorLocale = editor.getLocale();
-            if (editorLocale != null && editorLocale.equals(locale)
-                    || editorLocale == null && locale == null) {
+            if (editorLocale != null && editorLocale.equals(locale) || editorLocale == null && locale == null) {
                 index = i;
                 break;
             }
         }
         if (index > -1) {
-            setActivePage(index + 1);
+            this.setActivePage(index + 1);
         }
     }
+
 
     @Override
     public void gotoMarker(IMarker marker) {
         IPath markerPath = marker.getResource().getProjectRelativePath();
-        SourceEditor[] sourceEditors = resourceMediator.getSourceEditors();
+        SourceEditor[] sourceEditors = this.resourceMediator.getSourceEditors();
         for (int i = 0; i < sourceEditors.length; i++) {
             SourceEditor editor = sourceEditors[i];
             IPath editorPath = editor.getFile().getProjectRelativePath();
             if (markerPath.equals(editorPath)) {
-                setActivePage(editor.getLocale());
+                this.setActivePage(editor.getLocale());
                 IDE.gotoMarker(editor.getEditor(), marker);
                 break;
             }
         }
     }
-    
+
+
     /**
      * Calculates the contents of page GUI page when it is activated.
      * @param newPageIndex new page index
@@ -289,41 +261,45 @@ public class ResourceBundleEditor extends MultiPageEditorPart
     @Override
     protected void pageChange(int newPageIndex) {
         super.pageChange(newPageIndex);
-        KeyTree keyTree = resourceMediator.getKeyTree();
-        
-        if (lastEditor != null) {
-            String lastEditorKey = lastEditor.getCurrentKey();
-            if (lastEditorKey != null)
-                keyTree.selectKey(lastEditor.getCurrentKey());
+        KeyTree keyTree = this.resourceMediator.getKeyTree();
+
+        if (this.lastEditor != null) {
+            String lastEditorKey = this.lastEditor.getCurrentKey();
+            if (lastEditorKey != null) {
+                keyTree.selectKey(this.lastEditor.getCurrentKey());
+            }
         }
-        
-        if (newPageIndex == 0) {  // switched to first page
-            resourceMediator.reloadProperties();
-            i18nPage.refreshTextBoxes();
-            lastEditor = null; // reset lastEditor
+
+        if (newPageIndex == 0) { // switched to first page
+            this.resourceMediator.reloadProperties();
+            this.i18nPage.refreshTextBoxes();
+            this.lastEditor = null; // reset lastEditor
             return;
         }
-        
-        if (newPageIndex == getPageCount()-1) // switched to last page
+
+        if (newPageIndex == this.getPageCount() - 1) {
             return;
-        
-        int editorIndex = newPageIndex - 1; // adjust because first page is tree page        
-        if (editorIndex >= 0 && editorIndex < resourceMediator.getSourceEditors().length) {
-            lastEditor = resourceMediator.getSourceEditors()[editorIndex];
-            if (keyTree.getSelectedKey() != null)
-                lastEditor.selectKey(keyTree.getSelectedKey());
+        }
+
+        int editorIndex = newPageIndex - 1; // adjust because first page is tree page
+        if (editorIndex >= 0 && editorIndex < this.resourceMediator.getSourceEditors().length) {
+            this.lastEditor = this.resourceMediator.getSourceEditors()[editorIndex];
+            if (keyTree.getSelectedKey() != null) {
+                this.lastEditor.selectKey(keyTree.getSelectedKey());
+            }
         }
     }
 
-    
+
     /**
      * Is the given file a member of this resource bundle.
      * @param file file to test
      * @return <code>true</code> if file is part of bundle
      */
     public boolean isBundleMember(IFile file) {
-        return resourceMediator.isResource(file);
+        return this.resourceMediator.isResource(file);
     }
+
 
     private void closeIfAreadyOpen(final IEditorSite site, final IFile file) {
         IWorkbenchPage[] pages = site.getWorkbenchWindow().getPages();
@@ -338,6 +314,7 @@ public class ResourceBundleEditor extends MultiPageEditorPart
                         // putting the close operation into the queue
                         // closing during opening caused errors.
                         Display.getDefault().asyncExec(new Runnable() {
+
                             @Override
                             public void run() {
                                 page.closeEditor(editor, true);
@@ -349,42 +326,44 @@ public class ResourceBundleEditor extends MultiPageEditorPart
         }
     }
 
+
     @Override
     public void dispose() {
-        
-        if (i18nPage != null) {
-            i18nPage.dispose();
+
+        if (this.i18nPage != null) {
+            this.i18nPage.dispose();
         }
-        if (newLocalePage != null) {
-            newLocalePage.dispose();
-        }
-        
-        /* fix for a weird memory leak: unless we remove the selectionProvider 
-         * from our editor, nothing get's GCed. */
-        getSite().setSelectionProvider(null);
-        SourceEditor[] sourceEditors = resourceMediator.getSourceEditors();
-        for ( int i = 0; i < sourceEditors.length; i++ ) {
-           SourceEditor editor = sourceEditors[i];
-           editor.getEditor().getSite().setSelectionProvider(null);
+        if (this.newLocalePage != null) {
+            this.newLocalePage.dispose();
         }
 
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(
-                resourceChangeListener);
+        /*
+         * fix for a weird memory leak: unless we remove the selectionProvider from our editor, nothing get's GCed.
+         */
+        this.getSite().setSelectionProvider(null);
+        SourceEditor[] sourceEditors = this.resourceMediator.getSourceEditors();
+        for (int i = 0; i < sourceEditors.length; i++) {
+            SourceEditor editor = sourceEditors[i];
+            editor.getEditor().getSite().setSelectionProvider(null);
+        }
+
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this.resourceChangeListener);
         super.dispose();
     }
 
     private class ResourceChangeListener implements IResourceChangeListener {
-      @Override
-      public void resourceChanged( IResourceChangeEvent event ) {
-         boolean deltaFound = false;
-         for ( IPath path : paths ) {
-            IResourceDelta delta = event.getDelta().findMember(path);
-            deltaFound |= delta!= null;
-         }
-         if ( deltaFound ) {
-            resourceMediator.reloadProperties();
-            i18nPage.refreshTextBoxes();
-         }
-      }
-   }
+
+        @Override
+        public void resourceChanged(IResourceChangeEvent event) {
+            boolean deltaFound = false;
+            for (IPath path : ResourceBundleEditor.this.paths) {
+                IResourceDelta delta = event.getDelta().findMember(path);
+                deltaFound |= delta != null;
+            }
+            if (deltaFound) {
+                ResourceBundleEditor.this.resourceMediator.reloadProperties();
+                ResourceBundleEditor.this.i18nPage.refreshTextBoxes();
+            }
+        }
+    }
 }

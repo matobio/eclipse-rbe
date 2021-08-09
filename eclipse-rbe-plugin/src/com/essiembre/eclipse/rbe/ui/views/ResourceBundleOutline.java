@@ -1,17 +1,8 @@
 /*
- * Copyright (C) 2003-2014  Pascal Essiembre
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (C) 2003-2014 Pascal Essiembre Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 package com.essiembre.eclipse.rbe.ui.views;
 
@@ -45,123 +36,129 @@ import com.essiembre.eclipse.rbe.ui.editor.i18n.tree.TreeViewerContributor;
  */
 public class ResourceBundleOutline extends ContentOutlinePage {
 
-    private KeyTree tree;
+    private KeyTree                tree;
     private KeyTreeContentProvider contentprovider;
-    private ToggleAction filterincomplete;
-    private ToggleAction flataction;
-    private ToggleAction hierarchicalaction;
-    private boolean hierarchical;
-    private TreeViewerContributor contributor;
+    private ToggleAction           filterincomplete;
+    private ToggleAction           flataction;
+    private ToggleAction           hierarchicalaction;
+    private boolean                hierarchical;
+    private TreeViewerContributor  contributor;
 
     /**
      * Initializes this outline while using the mediator which provides all
      * necessary informations.
-     * 
+     *
      * @param mediator
      *            The mediator which comes with all necessary informations.
      */
     public ResourceBundleOutline(KeyTree keytree) {
         super();
-        tree = keytree;
-        contentprovider = new KeyTreeContentProvider();
-        hierarchical = RBEPreferences.getKeyTreeHierarchical();
+        this.tree = keytree;
+        this.contentprovider = new KeyTreeContentProvider();
+        this.hierarchical = RBEPreferences.getKeyTreeHierarchical();
     }
+
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void createControl(Composite parent) {
         super.createControl(parent);
-        getTreeViewer().setContentProvider(contentprovider);
-        getTreeViewer().setLabelProvider(new KeyTreeLabelProvider());
-        getTreeViewer().setUseHashlookup(true);
-        getTreeViewer().setInput(tree);
+        this.getTreeViewer().setContentProvider(this.contentprovider);
+        this.getTreeViewer().setLabelProvider(new KeyTreeLabelProvider());
+        this.getTreeViewer().setUseHashlookup(true);
+        this.getTreeViewer().setInput(this.tree);
         if (RBEPreferences.getKeyTreeExpanded()) {
-            ((Tree) getTreeViewer().getControl()).setRedraw(false);
-            getTreeViewer().expandAll();
-            ((Tree) getTreeViewer().getControl()).setRedraw(true);
+            ((Tree) this.getTreeViewer().getControl()).setRedraw(false);
+            this.getTreeViewer().expandAll();
+            ((Tree) this.getTreeViewer().getControl()).setRedraw(true);
         }
-        contributor = new TreeViewerContributor(tree, getTreeViewer());
-        contributor.createControl(parent);
+        this.contributor = new TreeViewerContributor(this.tree, this.getTreeViewer());
+        this.contributor.createControl(parent);
         LocalBehaviour localbehaviour = new LocalBehaviour();
-        getTreeViewer().addSelectionChangedListener(localbehaviour);
-        getTreeViewer().getTree().addMouseListener(localbehaviour);
+        this.getTreeViewer().addSelectionChangedListener(localbehaviour);
+        this.getTreeViewer().getTree().addMouseListener(localbehaviour);
     }
+
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void dispose() {
         // contributor.dispose();
         super.dispose();
     }
 
+
     /**
      * Gets the selected key tree item.
-     * 
+     *
      * @return key tree item
      */
     public KeyTreeItem getTreeSelection() {
-        IStructuredSelection selection = (IStructuredSelection) getTreeViewer()
-                .getSelection();
+        IStructuredSelection selection = (IStructuredSelection) this.getTreeViewer().getSelection();
         return ((KeyTreeItem) selection.getFirstElement());
     }
 
+
     /**
      * Gets selected key.
-     * 
+     *
      * @return selected key
      */
     private String getSelectedKey() {
         String key = null;
-        KeyTreeItem item = getTreeSelection();
+        KeyTreeItem item = this.getTreeSelection();
         if (item != null) {
             key = item.getId();
         }
         return (key);
     }
 
+
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setActionBars(IActionBars actionbars) {
         super.setActionBars(actionbars);
-        filterincomplete = new ToggleAction(UIUtils.IMAGE_INCOMPLETE_ENTRIES);
-        flataction = new ToggleAction(UIUtils.IMAGE_LAYOUT_FLAT);
-        hierarchicalaction = 
-                new ToggleAction(UIUtils.IMAGE_LAYOUT_HIERARCHICAL);
-        flataction.setToolTipText(RBEPlugin.getString("key.layout.flat"));
-        hierarchicalaction.setToolTipText(RBEPlugin
-                .getString("key.layout.tree"));
-        filterincomplete.setToolTipText(RBEPlugin
-                .getString("key.filter.incomplete"));
-        flataction.setChecked(!hierarchical);
-        hierarchicalaction.setChecked(hierarchical);
-        actionbars.getToolBarManager().add(flataction);
-        actionbars.getToolBarManager().add(hierarchicalaction);
-        actionbars.getToolBarManager().add(filterincomplete);
+        this.filterincomplete = new ToggleAction(UIUtils.IMAGE_INCOMPLETE_ENTRIES);
+        this.filterincomplete.setToolTipText(RBEPlugin.getString("key.filter.incomplete"));
+
+        this.flataction = new ToggleAction(UIUtils.IMAGE_LAYOUT_FLAT);
+        this.flataction.setToolTipText(RBEPlugin.getString("key.layout.flat"));
+        this.flataction.setChecked(!this.hierarchical);
+
+        this.hierarchicalaction = new ToggleAction(UIUtils.IMAGE_LAYOUT_HIERARCHICAL);
+        this.hierarchicalaction.setToolTipText(RBEPlugin.getString("key.layout.tree"));
+        this.hierarchicalaction.setChecked(this.hierarchical);
+
+        actionbars.getToolBarManager().add(this.flataction);
+        actionbars.getToolBarManager().add(this.hierarchicalaction);
+        actionbars.getToolBarManager().add(this.filterincomplete);
     }
+
 
     /**
      * Invokes this functionality according to the toggled action.
-     * 
+     *
      * @param action
      *            The action that has been toggled.
      */
     private void update(ToggleAction action) {
         int actioncode = 0;
-        if (action == filterincomplete) {
+        if (action == this.filterincomplete) {
             actioncode = TreeViewerContributor.KT_INCOMPLETE;
-        } else if (action == flataction) {
+        } else if (action == this.flataction) {
             actioncode = TreeViewerContributor.KT_FLAT;
-        } else if (action == hierarchicalaction) {
+        } else if (action == this.hierarchicalaction) {
             actioncode = TreeViewerContributor.KT_HIERARCHICAL;
         }
-        contributor.update(actioncode, action.isChecked());
-        flataction.setChecked((contributor.getMode() 
-                & TreeViewerContributor.KT_HIERARCHICAL) == 0);
-        hierarchicalaction.setChecked((contributor.getMode() 
-                & TreeViewerContributor.KT_HIERARCHICAL) != 0);
+        this.contributor.update(actioncode, action.isChecked());
+        this.flataction.setChecked((this.contributor.getMode() & TreeViewerContributor.KT_HIERARCHICAL) == 0);
+        this.hierarchicalaction.setChecked((this.contributor.getMode() & TreeViewerContributor.KT_HIERARCHICAL) != 0);
     }
 
     /**
@@ -172,63 +169,65 @@ public class ResourceBundleOutline extends ContentOutlinePage {
 
         /**
          * Initializes this action using the supplied icon.
-         * 
+         *
          * @param icon
          *            The icon which shall be displayed.
          */
         public ToggleAction(String icon) {
             super(null, IAction.AS_CHECK_BOX);
-            setImageDescriptor(RBEPlugin.getImageDescriptor(icon));
+            this.setImageDescriptor(RBEPlugin.getImageDescriptor(icon));
         }
+
 
         @Override
         public void run() {
-            update(this);
+            ResourceBundleOutline.this.update(this);
         }
     }
 
     /**
      * Implementation of custom behaviour.
      */
-    private class LocalBehaviour extends MouseAdapter implements
-            IDeltaListener, ISelectionChangedListener {
+    private class LocalBehaviour extends MouseAdapter implements IDeltaListener, ISelectionChangedListener {
 
         @Override
         public void selectionChanged(SelectionChangedEvent event) {
-            String selected = getSelectedKey();
+            String selected = ResourceBundleOutline.this.getSelectedKey();
             if (selected != null) {
-                tree.selectKey(selected);
+                ResourceBundleOutline.this.tree.selectKey(selected);
             }
         }
 
-        @Override
-        public void add(DeltaEvent event) {
-        }
 
         @Override
-        public void remove(DeltaEvent event) {
-        }
+        public void add(DeltaEvent event) {}
+
 
         @Override
-        public void modify(DeltaEvent event) {
-        }
+        public void remove(DeltaEvent event) {}
+
+
+        @Override
+        public void modify(DeltaEvent event) {}
+
 
         @Override
         public void select(DeltaEvent event) {
             KeyTreeItem item = (KeyTreeItem) event.receiver();
             if (item != null) {
-                getTreeViewer().setSelection(new StructuredSelection(item));
+                ResourceBundleOutline.this.getTreeViewer().setSelection(new StructuredSelection(item));
             }
         }
 
+
         @Override
         public void mouseDoubleClick(MouseEvent event) {
-            Object element = getSelection();
-            if (getTreeViewer().isExpandable(element)) {
-                if (getTreeViewer().getExpandedState(element)) {
-                    getTreeViewer().collapseToLevel(element, 1);
+            Object element = ResourceBundleOutline.this.getSelection();
+            if (ResourceBundleOutline.this.getTreeViewer().isExpandable(element)) {
+                if (ResourceBundleOutline.this.getTreeViewer().getExpandedState(element)) {
+                    ResourceBundleOutline.this.getTreeViewer().collapseToLevel(element, 1);
                 } else {
-                    getTreeViewer().expandToLevel(element, 1);
+                    ResourceBundleOutline.this.getTreeViewer().expandToLevel(element, 1);
                 }
             }
         }
