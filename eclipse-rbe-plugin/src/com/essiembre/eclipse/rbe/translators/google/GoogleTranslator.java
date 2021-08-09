@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.json.JSONArray;
+import org.eclipse.json.provisonnal.com.eclipsesource.json.JsonValue;
 
 import com.essiembre.eclipse.rbe.translators.ITranslator;
 
@@ -58,12 +58,19 @@ public class GoogleTranslator implements ITranslator {
             in.close();
 
             String inputJson = response.toString();
-            JSONArray jsonArray = new JSONArray(inputJson);
-            JSONArray jsonArray2 = (JSONArray) jsonArray.get(0);
+            // JSONArray jsonArray = new JSONArray(inputJson);
+            // JSONArray jsonArray2 = (JSONArray) jsonArray.get(0);
+            // for (int i = 0; i < jsonArray2.length(); i++) {
+            // if ((JSONArray) jsonArray2.get(i) != null) {
+            // sbTranslation.append(((JSONArray) jsonArray2.get(i)).get(0).toString());
+            // }
+            // }
+            JsonValue jsonArray = JsonValue.readFrom(inputJson);
+            JsonValue jsonArray2 = jsonArray.asArray().get(0);
 
-            for (int i = 0; i < jsonArray2.length(); i++) {
-                if ((JSONArray) jsonArray2.get(i) != null) {
-                    sbTranslation.append(((JSONArray) jsonArray2.get(i)).get(0).toString());
+            for (int i = 0; i < jsonArray2.asArray().size(); i++) {
+                if (jsonArray2.asArray().get(i) != null) {
+                    sbTranslation.append(jsonArray2.asArray().get(i).asArray().get(0).toString());
                 }
             }
 
