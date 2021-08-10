@@ -94,7 +94,7 @@ public class I18nPage extends ScrolledComposite {
 
             this.setContent(sashForm);
 
-            this.keysComposite = new KeyTreeComposite(sashForm, resourceMediator.getKeyTree());
+            this.keysComposite = new KeyTreeComposite(sashForm, resourceMediator.getKeyTree(), this);
             this.keysComposite.getTreeViewer().addSelectionChangedListener(this.localBehaviour);
 
             this.editingComposite = new ScrolledComposite(sashForm, SWT.V_SCROLL | SWT.H_SCROLL);
@@ -549,6 +549,11 @@ public class I18nPage extends ScrolledComposite {
 
     public ITranslator getTranslator() {
         return TranslatorHandler.getTranslator(this.translator);
+    }
+
+
+    public void setTranslator(TranslatorType translator) {
+        this.translator = translator;
     }
 
 

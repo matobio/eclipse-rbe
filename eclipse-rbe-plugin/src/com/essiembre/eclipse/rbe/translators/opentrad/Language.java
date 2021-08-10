@@ -18,17 +18,42 @@ public enum Language {
         return this.value;
     }
 
-    public static final Map<Language, Language> directions = new HashMap<>();
+    public static final Map<Language, Language[]> directions = new HashMap<>();
     static {
-        Language.directions.put(Spanish, English);
-        Language.directions.put(Spanish, Galician);
-        Language.directions.put(Spanish, Catalan);
-        Language.directions.put(Spanish, Portuguese);
-        Language.directions.put(Spanish, French);
-        Language.directions.put(Spanish, Italian);
+        Language.directions.put(Spanish, new Language[] { English, Galician, Catalan, Portuguese, French, Italian });
+        Language.directions.put(English, new Language[] { Catalan, Galician, Spanish });
+    }
 
-        Language.directions.put(English, Catalan);
-        Language.directions.put(English, Spanish);
-        Language.directions.put(English, Galician);
+    public static boolean isValidLanguages(Language languageFrom, Language languageTo) {
+        if (languageFrom == null || languageTo == null) {
+            return false;
+        }
+        Language[] validLanguages = Language.directions.get(languageFrom);
+        for (int i = 0; i < validLanguages.length; i++) {
+            if (validLanguages[i].equals(languageTo)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public static Language of(String lang) {
+        if (lang == null || lang.isEmpty()) {
+            return null;
+        }
+
+        if (lang.contains("-")) {
+            lang = lang.substring(0, lang.indexOf("-"));
+        } else if (lang.contains("_")) {
+            lang = lang.substring(0, lang.indexOf("_"));
+        }
+
+        for (int i = 0; i < Language.values().length; i++) {
+            if (Language.values()[i].getValue().equals(lang)) {
+                return Language.values()[i];
+            }
+        }
+        return null;
     }
 }

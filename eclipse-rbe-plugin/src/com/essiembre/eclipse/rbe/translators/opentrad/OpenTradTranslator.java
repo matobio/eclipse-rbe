@@ -35,8 +35,14 @@ public class OpenTradTranslator implements ITranslator {
 
     @Override
     public String translate(String langFrom, String langTo, String textToTranslate) {
-        // TODO
-        return null;
+
+        Language languageFrom = Language.of(langFrom);
+        Language languageTo = Language.of(langTo);
+
+        if (Language.isValidLanguages(languageFrom, languageTo)) {
+            return this.translate(languageFrom, languageTo, textToTranslate);
+        }
+        return "";
     }
 
 

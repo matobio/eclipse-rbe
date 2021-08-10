@@ -26,15 +26,20 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 import com.essiembre.eclipse.rbe.RBEPlugin;
 import com.essiembre.eclipse.rbe.model.bundle.BundleGroup;
@@ -44,7 +49,9 @@ import com.essiembre.eclipse.rbe.model.tree.updater.FlatKeyTreeUpdater;
 import com.essiembre.eclipse.rbe.model.tree.updater.GroupedKeyTreeUpdater;
 import com.essiembre.eclipse.rbe.model.tree.visitors.KeysStartingWithVisitor;
 import com.essiembre.eclipse.rbe.model.workbench.RBEPreferences;
+import com.essiembre.eclipse.rbe.translators.TranslatorHandler;
 import com.essiembre.eclipse.rbe.ui.UIUtils;
+import com.essiembre.eclipse.rbe.ui.editor.i18n.I18nPage;
 
 /**
  * Tree for displaying and navigating through resource bundle keys.
@@ -83,16 +90,17 @@ public class KeyTreeComposite extends Composite {
     private TreeViewerContributor  treeviewerContributor;
 
     private Text                   filterTextBox;
+    protected I18nPage             page;
 
     /**
      * Constructor.
      * @param parent parent composite
      * @param keyTree key tree
      */
-    public KeyTreeComposite(Composite parent, final KeyTree keyTree) {
+    public KeyTreeComposite(Composite parent, final KeyTree keyTree, I18nPage page) {
         super(parent, SWT.BORDER);
         this.keyTree = keyTree;
-
+        this.page = page;
         this.treeToggleImage = UIUtils.getImage(UIUtils.IMAGE_LAYOUT_HIERARCHICAL);
         this.flatToggleImage = UIUtils.getImage(UIUtils.IMAGE_LAYOUT_FLAT);
         this.translateToggleImage = UIUtils.getImage(UIUtils.IMAGE_LAYOUT_TRANSLATOR);
@@ -213,21 +221,10 @@ public class KeyTreeComposite extends Composite {
         this.filterTextBox = new Text(topComposite, SWT.BORDER);
         // filterTextBox.setText("");
         this.filterTextBox.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        this.filterTextBox.addModifyListener(new ModifyListener() {
-
-            @Override
-            public void modifyText(ModifyEvent e) {
-                KeyTreeComposite.this.keyTree.filterKeyItems(KeyTreeComposite.this.filterTextBox.getText());
-                KeyTreeComposite.this.treeViewer.getControl().setRedraw(false);
-                KeyTreeComposite.this.treeViewer.refresh();
-                if (!KeyTreeComposite.this.filterTextBox.getText().isEmpty()) {
-                    KeyTreeComposite.this.treeViewer.expandAll();
-                }
-                KeyTreeComposite.this.treeViewer.getControl().setRedraw(true);
-            }
-        });
+        this.filterTextBox.addModifyListener(this.getFilterTextBoxModifyListener());
 
         Composite topRightComposite = new Composite(topComposite, SWT.NONE);
+        // ToolBar topRightComposite = new ToolBar(topComposite, SWT.NONE);
         gridLayout = new GridLayout(3, false);
         gridLayout.horizontalSpacing = 0;
         gridLayout.verticalSpacing = 0;
@@ -260,21 +257,61 @@ public class KeyTreeComposite extends Composite {
         hierModeButton.addSelectionListener(this.getHierButtonSelectionListener(hierModeButton, flatModeButton));
         flatModeButton.addSelectionListener(this.getFlatButtonSelectionListener(hierModeButton, flatModeButton));
 
-        // final Button translateButton = new Button(topRightComposite, SWT.TOGGLE);
-        // translateButton.setImage(this.translateToggleImage);
-        // translateButton.setToolTipText(RBEPlugin.getString("key.layout.translate"));
-        // translateButton.addSelectionListener(this.getTranslateButtonSelectionListener());
+        final ToolBar toolBar = new ToolBar(topComposite, SWT.NONE);
 
-    }
-
-
-    private SelectionListener getTranslateButtonSelectionListener() {
-        return new SelectionAdapter() {
+        final ToolItem translatorButton = new ToolItem(toolBar, SWT.DROP_DOWN);
+        translatorButton.setImage(this.translateToggleImage);
+        translatorButton.setToolTipText(RBEPlugin.getString("key.layout.translator"));
+        final Menu menu = new Menu(translatorButton.getParent().getShell());
+        MenuItem menuItemGoogle = new MenuItem(menu, SWT.PUSH);
+        menuItemGoogle.setText(TranslatorHandler.TranslatorType.GOOGLE_TRANSLATOR.getText());
+        menuItemGoogle.addSelectionListener(new TranslatorMenuSelectionAdapter(TranslatorHandler.TranslatorType.GOOGLE_TRANSLATOR));
+        MenuItem menuItemOpenTrad = new MenuItem(menu, SWT.PUSH);
+        menuItemOpenTrad.setText(TranslatorHandler.TranslatorType.OPENTRAD_TRANSLATOR.getText());
+        menuItemOpenTrad.addSelectionListener(new TranslatorMenuSelectionAdapter(TranslatorHandler.TranslatorType.OPENTRAD_TRANSLATOR));
+        translatorButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent event) {
-                // TODO: translate resources
-                System.out.print("Translate...");
+                if (event.detail == SWT.ARROW) {
+                    Rectangle rect = translatorButton.getBounds();
+                    Point pt = new Point(rect.x - (rect.width * 3), rect.y + rect.height);
+                    pt = toolBar.toDisplay(pt);
+                    menu.setLocation(pt.x, pt.y);
+                    menu.setVisible(true);
+                }
+            }
+        });
+
+    }
+
+    class TranslatorMenuSelectionAdapter extends SelectionAdapter {
+
+        TranslatorHandler.TranslatorType translatorType;
+
+        public TranslatorMenuSelectionAdapter(TranslatorHandler.TranslatorType translatorType) {
+            this.translatorType = translatorType;
+        }
+
+
+        @Override
+        public void widgetSelected(SelectionEvent event) {
+            KeyTreeComposite.this.page.setTranslator(this.translatorType);
+        }
+    }
+
+    private ModifyListener getFilterTextBoxModifyListener() {
+        return new ModifyListener() {
+
+            @Override
+            public void modifyText(ModifyEvent e) {
+                KeyTreeComposite.this.keyTree.filterKeyItems(KeyTreeComposite.this.filterTextBox.getText());
+                KeyTreeComposite.this.treeViewer.getControl().setRedraw(false);
+                KeyTreeComposite.this.treeViewer.refresh();
+                if (!KeyTreeComposite.this.filterTextBox.getText().isEmpty()) {
+                    KeyTreeComposite.this.treeViewer.expandAll();
+                }
+                KeyTreeComposite.this.treeViewer.getControl().setRedraw(true);
             }
         };
     }
