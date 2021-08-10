@@ -9,6 +9,11 @@ Eclipse plugin for editing Java resource bundles. Lets you manage all localized 
 Go to ResourceBundle Editor web site for more screenshots and other information: http://matobio.github.io/eclipse-rbe/
 
 
+Changes
+--------------
+
+- New translate button on each textbox field to translate the text using an API Rest Translator.
+
 How to install
 --------------
 
