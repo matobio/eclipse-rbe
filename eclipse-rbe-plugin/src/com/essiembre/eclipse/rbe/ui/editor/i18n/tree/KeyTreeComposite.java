@@ -260,10 +260,10 @@ public class KeyTreeComposite extends Composite {
         hierModeButton.addSelectionListener(this.getHierButtonSelectionListener(hierModeButton, flatModeButton));
         flatModeButton.addSelectionListener(this.getFlatButtonSelectionListener(hierModeButton, flatModeButton));
 
-        final Button translateButton = new Button(topRightComposite, SWT.TOGGLE);
-        translateButton.setImage(this.translateToggleImage);
-        translateButton.setToolTipText(RBEPlugin.getString("key.layout.translate"));
-        translateButton.addSelectionListener(this.getTranslateButtonSelectionListener());
+        // final Button translateButton = new Button(topRightComposite, SWT.TOGGLE);
+        // translateButton.setImage(this.translateToggleImage);
+        // translateButton.setToolTipText(RBEPlugin.getString("key.layout.translate"));
+        // translateButton.addSelectionListener(this.getTranslateButtonSelectionListener());
 
     }
 
