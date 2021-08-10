@@ -22,7 +22,7 @@ How to install
 1. Go to the menu "Help" in Eclipse. 
 2. Choose "Install New Software".
 3. Paste the next URL into the input "Work with:": ``https://raw.githubusercontent.com/matobio/eclipse-rbe/master/eclipse-rbe-update-site/site.xml``
-4. Select the plugin version and clic "Next".
+4. Select the plugin version and click "Next".
 
 
 **Manual Install:**
