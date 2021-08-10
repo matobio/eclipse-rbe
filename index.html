@@ -25,7 +25,7 @@
       <div class="inner">
         <h1>Eclipse ResourceBundle Editor</h1>
         <h2>Localization of .properties files made easy!</h2>
-        <a href="https://github.com/essiembre/eclipse-rbe" class="button"><small>View project on</small>GitHub</a>
+        <a href="https://github.com/matobio/eclipse-rbe" class="button"><small>View project on</small>GitHub</a>
       </div>
     </header>
 
@@ -41,33 +41,30 @@
 
 <p>It requires Java 7 or higher.</p>
 
-<p>Latest release: <b>1.0.6</b> (2017-02-24).  <a href="https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-plugin/CHANGES.txt">Release Notes</a></p>
+<p>Latest release: <a href="http://essiembre.github.io/eclipse-rbe/">Original site </a></p>
+
+<p>Latest release by Manuel Tobío: <b>1.0.7</b> (2021-08-10).</p>
 
 <h3>
 <a name="screenshots" class="anchor" href="#screenshots"><span class="octicon octicon-link"></span></a>Screenshots</h3>
 
 <p>
-<a href="img/screenshots/main-screen.png" data-lightbox="screenshots" title="The ResourceBundle Editor in action on itself!">
-    <img src="img/screenshots/main-screen.png" style="width:18%;"></a>
-<a href="img/screenshots/wizard.png" data-lightbox="screenshots" title="Use the ResourceBundle Wizard to create new resource bundles.">
-    <img src="img/screenshots/wizard.png" style="width:18%;"></a>
-<a href="img/screenshots/preferences-general.png" data-lightbox="screenshots" title="General preferences.">
-    <img src="img/screenshots/preferences-general.png" style="width:18%;"></a>
-<a href="img/screenshots/preferences-formatting.png" data-lightbox="screenshots" title="Formatting preferences.">
-    <img src="img/screenshots/preferences-formatting.png" style="width:18%;"></a>
-<a href="img/screenshots/preferences-performance.png" data-lightbox="screenshots" title="Preferences affecting performance.">
-    <img src="img/screenshots/preferences-performance.png" style="width:18%;"></a>
+<a href="img/screenshots/main_1_0_7.png" data-lightbox="screenshots" title="The ResourceBundle Editor in action on itself!">
+    <img src="img/screenshots/main_1_0_7.png" style="width:18%;"></a>
+<!-- <a href="img/screenshots/main-screen.png" data-lightbox="screenshots" title="The ResourceBundle Editor in action on itself!"> -->
+<!--     <img src="img/screenshots/main-screen.png" style="width:18%;"></a> -->
+<!-- <a href="img/screenshots/wizard.png" data-lightbox="screenshots" title="Use the ResourceBundle Wizard to create new resource bundles."> -->
+<!--     <img src="img/screenshots/wizard.png" style="width:18%;"></a> -->
+<!-- <a href="img/screenshots/preferences-general.png" data-lightbox="screenshots" title="General preferences."> -->
+<!--     <img src="img/screenshots/preferences-general.png" style="width:18%;"></a> -->
+<!-- <a href="img/screenshots/preferences-formatting.png" data-lightbox="screenshots" title="Formatting preferences."> -->
+<!--     <img src="img/screenshots/preferences-formatting.png" style="width:18%;"></a> -->
+<!-- <a href="img/screenshots/preferences-performance.png" data-lightbox="screenshots" title="Preferences affecting performance."> -->
+<!--     <img src="img/screenshots/preferences-performance.png" style="width:18%;"></a> -->
 
 </p>
 <p style="text-align: center;">(Click on an image to expand it.)</p>
 
-<h3>
-<a name="marketplace" class="anchor" href="#marketplace"><span class="octicon octicon-link"></span></a>Marketplace</h3>
-
-<p>Just drag the following image to your working Eclipse workspace:<br />
-<a href="http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=2628188" class="drag" title="Drag to your running Eclipse workspace to install ResourceBundle Editor"><img src="https://marketplace.eclipse.org/sites/all/themes/solstice/public/images/marketplace/btn-install.png" alt="Drag to your running Eclipse workspace to install ResourceBundle Editor" /></a></p>
-
-<p>or visit page: <a href="https://marketplace.eclipse.org/content/resourcebundle-editor">ResourceBundle Editor on Marketplace</a></p>
 
 <h3>
 <a name="update-site" class="anchor" href="#update-site"><span class="octicon octicon-link"></span></a>Update Site</h3>
@@ -83,7 +80,7 @@
 <h3>
 <a name="manual-install" class="anchor" href="#manual-install"><span class="octicon octicon-link"></span></a>Manual Install</h3>
 
-<p>Download the plugin jar and copy it to Eclipse plugins directory. The jar lcation is (replace <code>&lt;version&gt;</code>): 
+<p>Download the plugin jar and copy it to Eclipse dropins directory. The jar location is (replace <code>&lt;version&gt;</code>): 
 
 <ul>
   <li><small>https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-update-site/plugins/com.essiembre.eclipse.rbe_<code>&lt;version&gt;</code>.jar</small>.</li>
@@ -91,45 +88,20 @@
 
 <p>You can download the entire Update Site bundled with everything else in the above compressed package and create a new update site in Eclipse, pointing to your local directory where you expanded the package.</p>
 
-<h3>
-<a name="keyboard-shortcuts" class="anchor" href="#keyboard-shortcuts"><span class="octicon octicon-link"></span></a>Keyboard shortcuts</h3>
-
-<ul>
-<li>When editing in a language field, press <code>TAB</code> or <code>SHIFT+TAB</code> to move down/up the next/previous language field.  Keep in mind this feature will not work if you enable "Tab key inserts a tab in localized text fields" from the plugin preferences.</li>
-<li>When editing in a language field, use <code>CTRL+UP_ARROW</code> or <code>CTRL+DOWN_ARROW</code> to move up/down the key outline on the side and effectively change the message key you are editing.</li>
-</ul><h3>
-<a name="support" class="anchor" href="#support"><span class="octicon octicon-link"></span></a>Support</h3>
-
-<p>Post your issues or questions at <a href="https://github.com/essiembre/eclipse-rbe/issues">https://github.com/essiembre/eclipse-rbe/issues</a>.</p>
-
-<h3>
-<a name="notes" class="anchor" href="#notes"><span class="octicon octicon-link"></span></a>Notes</h3>
-
-<p>
-<ul>
-  <li>Since version 1.0.0, this plugin targets Eclipse 4.x and up.  For older Eclipse releases, use <a href="https://sourceforge.net/projects/eclipse-rbe/files/">
-      older versions</a> found on SourceForge. </li>
-  <li>This plugin was originally hosted on SourceForge (<a href="https://sourceforge.net/projects/eclipse-rbe/">https://sourceforge.net/projects/eclipse-rbe/</a>).  
-      It has been migrated on July 2014. The SourceForge version is outdated and no longer maintained.</li>
-</ul>
-
-
-</p>
-
 
         </section>
 
         <aside id="sidebar">
-          <a href="https://github.com/essiembre/eclipse-rbe/zipball/master" class="button">
+          <a href="https://github.com/matobio/eclipse-rbe/zipball/master" class="button">
             <small>Download</small>
             .zip file
           </a>
-          <a href="https://github.com/essiembre/eclipse-rbe/tarball/master" class="button">
+          <a href="https://github.com/matobio/eclipse-rbe/tarball/master" class="button">
             <small>Download</small>
             .tar.gz file
           </a>
 
-          <p class="repo-owner"><a href="https://github.com/essiembre/eclipse-rbe"></a> is maintained by <a href="https://github.com/essiembre">essiembre</a>.</p>
+          <p class="repo-owner"><a href="https://github.com/matobio/eclipse-rbe"></a> is maintained by <a href="https://github.com/matobio">matobio</a>.</p>
 
           <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
         </aside>
