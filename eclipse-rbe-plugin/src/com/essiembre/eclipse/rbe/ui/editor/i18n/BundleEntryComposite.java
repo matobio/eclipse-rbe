@@ -336,9 +336,9 @@ public class BundleEntryComposite extends Composite {
         this.duplButton.setToolTipText(RBEPlugin.getString("value.duplicate.tooltip"));
         this.duplButton.addSelectionListener(this.getDuplButtonSelectionListener());
 
-        // Commented checkbox
         gridData = new GridData();
         gridData.horizontalAlignment = GridData.END;
+        // gridData.grabExcessHorizontalSpace = true;
 
         // Translate button
         this.translateButton = new Button(labelComposite, SWT.TOGGLE);
@@ -346,7 +346,7 @@ public class BundleEntryComposite extends Composite {
         this.translateButton.setToolTipText(RBEPlugin.getString("key.layout.translate"));
         this.translateButton.addSelectionListener(this.getTranslateButtonSelectionListener());
 
-        // gridData.grabExcessHorizontalSpace = true;
+        // Commented checkbox
         this.commentedCheckbox = new Button(labelComposite, SWT.CHECK);
         this.commentedCheckbox.setText("#");
         this.commentedCheckbox.setFont(this.smallFont);
