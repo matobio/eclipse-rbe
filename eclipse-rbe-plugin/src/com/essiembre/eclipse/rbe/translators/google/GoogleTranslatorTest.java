@@ -10,6 +10,9 @@ public class GoogleTranslatorTest {
 
         String text = GoogleTranslator.getInstance().translate("en_GB", "es_ES", "Hello");
         Assert.assertEquals("\"Hola\"", text);
+
+        // text = GoogleTranslator.getInstance().translate("en_GB", "es_ES", "Hello\nGoodbye");
+        // Assert.assertEquals("\"Hola\nAdiós\"", text);
     }
 
 }

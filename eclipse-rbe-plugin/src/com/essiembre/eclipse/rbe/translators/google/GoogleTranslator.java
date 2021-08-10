@@ -58,19 +58,20 @@ public class GoogleTranslator implements ITranslator {
             in.close();
 
             String inputJson = response.toString();
-            // JSONArray jsonArray = new JSONArray(inputJson);
-            // JSONArray jsonArray2 = (JSONArray) jsonArray.get(0);
-            // for (int i = 0; i < jsonArray2.length(); i++) {
-            // if ((JSONArray) jsonArray2.get(i) != null) {
-            // sbTranslation.append(((JSONArray) jsonArray2.get(i)).get(0).toString());
-            // }
-            // }
+
             JsonValue jsonArray = JsonValue.readFrom(inputJson);
             JsonValue jsonArray2 = jsonArray.asArray().get(0);
 
             for (int i = 0; i < jsonArray2.asArray().size(); i++) {
                 if (jsonArray2.asArray().get(i) != null) {
-                    sbTranslation.append(jsonArray2.asArray().get(i).asArray().get(0).toString());
+                    String text = jsonArray2.asArray().get(i).asArray().get(0).toString();
+                    if (text != null && text.startsWith("\"")) {
+                        text = text.substring(1, text.length());
+                    }
+                    if (text != null && text.endsWith("\"")) {
+                        text = text.substring(0, text.length() - 1);
+                    }
+                    sbTranslation.append(text);
                 }
             }
 
