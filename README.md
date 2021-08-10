@@ -17,15 +17,15 @@ Changes
 How to install
 --------------
 
-**Update Site:**
+**Eclipse Install New Software**
 
-Create a new update site in Eclipse with the following:
-
-* Site name:  ``ResourceBundle Editor``
-* Site URL:   ``https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-update-site/site.xml``
+1. Go to the menu "Help" in Eclipse. 
+2. Choose "Install New Software".
+3. Paste the next URL into the input "Work with:": ``https://raw.githubusercontent.com/matobio/eclipse-rbe/master/eclipse-rbe-update-site/site.xml``
+4. Select the plugin version and clic "Next".
 
 
 **Manual Install:**
 
-Download the plugin jar and copy it to Eclipse dropins directory. The jar location is (replace ``<version>``): 
-``https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-update-site/plugins/com.essiembre.eclipse.rbe_<version>.jar``.   Alternatively, you can download the entire Update Site bundled with everything else in the release link above and create a new update site in Eclipse, pointing to your local directory where you expanded the release.
+Download the plugin jar and copy it to Eclipse dropins directory (\eclipse\dropins\). The jar location is (replace ``<version>``): 
+``https://github.com/matobio/eclipse-rbe/raw/master/eclipse-rbe-update-site/plugins/com.essiembre.eclipse.rbe_<version>.jar``.   Alternatively, you can download the entire Update Site bundled with everything else in the release link above and create a new update site in Eclipse, pointing to your local directory where you expanded the release.
