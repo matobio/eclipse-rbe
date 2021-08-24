@@ -2,7 +2,7 @@
 <feature
       id="com.essiembre.eclipse.rbe"
       label="ResourceBundle Editor"
-      version="1.0.7"
+      version="1.0.8"
       provider-name="Pascal Essiembre"
       plugin="com.essiembre.eclipse.rbe">
 
@@ -219,7 +219,7 @@
    </license>
 
    <url>
-      <update label="ResourceBundle Editor Update Site" url="https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-update-site/site.xml"/>
+      <update label="ResourceBundle Editor Update Site" url="https://raw.githubusercontent.com/matobio/eclipse-rbe/master/eclipse-rbe-update-site/site.xml"/>
    </url>
 
    <requires>
@@ -231,13 +231,16 @@
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.json"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.junit"/>
    </requires>
 
    <plugin
          id="com.essiembre.eclipse.rbe"
          download-size="0"
          install-size="0"
-         version="1.0.7"
+         version="1.0.8"
          unpack="false"/>
 
 </feature>
