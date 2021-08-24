@@ -27,6 +27,9 @@
    <feature url="features/com.essiembre.eclipse.rbe_1.0.7.jar" id="com.essiembre.eclipse.rbe" version="1.0.7">
       <category name="com.essiembre.eclipse.rbe"/>
    </feature>
+   <feature url="features/com.essiembre.eclipse.rbe_1.0.8.jar" id="com.essiembre.eclipse.rbe" version="1.0.8">
+      <category name="com.essiembre.eclipse.rbe"/>
+   </feature>
    
    <category-def name="com.essiembre.eclipse.rbe" label="Resource Bundle Editor">
       <description>
